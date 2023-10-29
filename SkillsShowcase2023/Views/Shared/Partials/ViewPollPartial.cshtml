@@ -1,0 +1,29 @@
+﻿@using MVCSkillsShowcaseApp.Models.Events;
+@model PollModel
+
+@{
+    ViewData["EventId"] = Model.EventId;
+    ViewData["PollId"] = Model.Id;
+    PollOptionModel newOption = new PollOptionModel();
+}
+
+<div>
+    <h4>Poll</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Deadline)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Deadline)
+        </dd>
+    </dl>
+
+    @if(Model.Options != null)
+    {
+        <partial name="Partials/ViewPollOptionsPartial" model="@Model.Options"/>
+    }
+
+    <partial name="Partials/CreatePollOptionPartial" model=@newOption view-data="ViewData" />
+
+</div>
