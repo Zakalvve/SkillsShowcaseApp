@@ -3,6 +3,7 @@
 
 @{
     ViewData["Title"] = Model.Name;
+    int eventId = ViewBag.EventId;
 }
 
 <h1>@Model.Name</h1>
@@ -35,7 +36,7 @@
         <partial name="Partials/ViewPollPartial" model="@Model.Poll" />
     } else
     {
-        @Html.ActionLink("Add Poll", "CreatePoll", new { eventId = ViewBag.EventId })
+        @Html.ActionLink("Add Poll", "CreatePoll", new { eventId })
     }
 
 </div>
