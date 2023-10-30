@@ -1,6 +1,4 @@
-﻿using MVCSkillsShowcaseDataLibrary.Models;
-
-namespace DataAccessLibrary.Models
+﻿namespace MVCSkillsShowcaseDataLibrary.Models
 {
     public class EventModel
     {

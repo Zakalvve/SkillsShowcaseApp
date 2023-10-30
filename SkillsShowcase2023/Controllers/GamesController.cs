@@ -2,7 +2,6 @@
 using Microsoft.IdentityModel.Tokens;
 using MVCSkillsShowcaseApp.Models.Games;
 using MVCSkillsShowcaseApp.Services;
-using System.ComponentModel;
 
 namespace MVCSkillsShowcaseApp.Controllers
 {
@@ -27,11 +26,15 @@ namespace MVCSkillsShowcaseApp.Controllers
                 var results = await _boardGameClient.SearchGamesAsync(searchTerm);
                 return View(results);
             } 
-            catch(Exception e)
+            catch(ArgumentException e)
             {
                 _logger.LogWarning(e.Message);
-                return View(new List<BoardGameResultModel>());
             }
+            catch(Exception e)
+            {
+                _logger.LogError(e.Message);
+            }
+            return View(new List<BoardGameResultModel>());
         }
 
 
@@ -52,11 +55,16 @@ namespace MVCSkillsShowcaseApp.Controllers
 
                 return View(result);
             } 
-            catch(Exception e)
+            catch(ArgumentException e)
             {
                 _logger.LogWarning(e.Message);
-                return RedirectToAction("Index");
             }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+            }
+
+            return RedirectToAction("Index");
         }
     }
 }

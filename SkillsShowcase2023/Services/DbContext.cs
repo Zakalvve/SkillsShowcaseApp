@@ -8,8 +8,8 @@ namespace MVCSkillsShowcaseApp.Services
 {
     public class DbContext : IDbContext
     {
-        private DatabaseSettings _dbSettings;
-        private EventAccessor _eventAccessor;
+        private readonly DatabaseSettings _dbSettings;
+        private readonly EventAccessor _eventAccessor;
 
         public DbContext(IOptions<DatabaseSettings> options)
         {
@@ -35,6 +35,7 @@ namespace MVCSkillsShowcaseApp.Services
         public List<EventModel> LoadEvents()
         {
             var data = _eventAccessor.LoadEvents();
+
             List<EventModel> events = data
                 .Select(row => new EventModel() { Id = row.Id, Name = row.Name, Description = row.Description, Location = row.Location, Time = row.Time })
                 .ToList();

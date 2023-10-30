@@ -27,6 +27,7 @@ namespace MVCSkillsShowcaseApp.Controllers
         public IActionResult Event(int eventId)
         {
             ViewBag.EventId = eventId;
+
             var model = _dbContext.LoadEvent(eventId);
 
             return View(model);

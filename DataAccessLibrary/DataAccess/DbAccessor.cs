@@ -2,20 +2,20 @@
 using System.Data;
 using Microsoft.Data.SqlClient;
 
-namespace MVCDataAccessLibrary.DataAccess
+namespace MVCSkillsShowcaseDataLibrary.DataAccess
 {
-    public class DbAccessor
+    internal class DbAccessor
     {
-        private string dbConnectionString;
+        private readonly string _dbConnectionString;
 
         public DbAccessor(string dbConnectionString)
         {
-            this.dbConnectionString = dbConnectionString;
+            _dbConnectionString = dbConnectionString;
         }
 
         public IEnumerable<T> LoadData<T>(string sql)
         {
-            using (IDbConnection cnn = new SqlConnection(dbConnectionString))
+            using (IDbConnection cnn = new SqlConnection(_dbConnectionString))
             {
                 return cnn.Query<T>(sql);
             }
@@ -23,7 +23,7 @@ namespace MVCDataAccessLibrary.DataAccess
 
         public int SaveData<T>(string sql, T data)
         {
-            using (IDbConnection cnn = new SqlConnection(dbConnectionString))
+            using (IDbConnection cnn = new SqlConnection(_dbConnectionString))
             {
                 return cnn.Execute(sql,data);
             }
@@ -31,7 +31,7 @@ namespace MVCDataAccessLibrary.DataAccess
 
         public IEnumerable<T3> MultiMapLoadData<T1, T2, T3>(string sql, Func<T1, T2, T3> mapper, string splitOn)
         {
-            using (IDbConnection cnn = new SqlConnection(dbConnectionString))
+            using (IDbConnection cnn = new SqlConnection(_dbConnectionString))
             {
                 return cnn.Query(sql, mapper, splitOn: splitOn);
             }
@@ -39,7 +39,7 @@ namespace MVCDataAccessLibrary.DataAccess
 
         public void ExecuteSql(string sql)
         {
-            using (IDbConnection cnn = new SqlConnection(dbConnectionString))
+            using (IDbConnection cnn = new SqlConnection(_dbConnectionString))
             {
                 cnn.Execute(sql);
             }

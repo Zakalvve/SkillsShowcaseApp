@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.IO;
 using System.Xml.Serialization;
 using MVCSkillsShowcaseApp.Models.Games;
 
@@ -6,7 +7,7 @@ namespace MVCSkillsShowcaseApp.Services
 {
     public class BoardGameGeekClient : IBoardGameClient
     {
-        private const string _rootPath = "https://boardgamegeek.com/xmlapi";
+        private readonly string _rootPath = "https://boardgamegeek.com/xmlapi";
         private readonly IApiClient _client;
 
         public BoardGameGeekClient(IApiClient client)
@@ -23,19 +24,15 @@ namespace MVCSkillsShowcaseApp.Services
                 if (response.IsSuccessStatusCode)
                 {
                     var buffer = await response.Content.ReadAsByteArrayAsync();
-                    using (var stream = new MemoryStream(buffer))
+
+                    var result = DeserializeXmlResponse<BoardGameSearchResult>(buffer).Result;
+
+                    if (result.Id == null || result.Name == null && result.Description == null && result.Image == null)
                     {
-                        var serializer = new XmlSerializer(typeof(BoardGameSearchResult));
-
-                        var result = ((BoardGameSearchResult)serializer.Deserialize(stream)).Result;
-
-                        if (result.Id == null || result.Name == null && result.Description == null && result.Image == null)
-                        {
-                            throw new ArgumentException("The given gameId returned an empty object");
-                        }
-
-                        return result;
+                        throw new ArgumentException("The given gameId returned an empty object");
                     }
+
+                    return result;
                 }
                 else
                 {
@@ -53,19 +50,26 @@ namespace MVCSkillsShowcaseApp.Services
                 if (response.IsSuccessStatusCode)
                 {
                     var buffer = await response.Content.ReadAsByteArrayAsync();
-                    using (var stream = new MemoryStream(buffer))
-                    {
-                        var serializer = new XmlSerializer(typeof(BoardGameSearchResults));
 
-                        var results = ((BoardGameSearchResults)serializer.Deserialize(stream)).Results;
+                    var results = DeserializeXmlResponse<BoardGameSearchResults>(buffer).Results;
 
-
-                        return results ?? throw new InvalidEnumArgumentException("The given search term did not return any results");
-                    }
-                } else
+                    return results ?? throw new InvalidEnumArgumentException("The given search term did not return any results");
+                } 
+                else
                 {
                     throw new Exception(response.ReasonPhrase);
                 }
+            }
+        }
+
+
+        private T DeserializeXmlResponse<T>(byte[] buffer)
+        {
+            using (var stream = new MemoryStream(buffer))
+            {
+                var serializer = new XmlSerializer(typeof(T));
+
+                return (T)serializer.Deserialize(stream);
             }
         }
     }

@@ -1,12 +1,10 @@
-﻿using DataAccessLibrary.Models;
-using MVCDataAccessLibrary.DataAccess;
-using MVCSkillsShowcaseDataLibrary.Models;
+﻿using MVCSkillsShowcaseDataLibrary.Models;
 
 namespace MVCSkillsShowcaseDataLibrary.DataAccess
 {
     public class EventAccessor
     {
-        private DbAccessor _accessor;
+        private readonly DbAccessor _accessor;
 
         public EventAccessor(string dbConnectionString)
         {
@@ -18,7 +16,7 @@ namespace MVCSkillsShowcaseDataLibrary.DataAccess
             EventModel data = new EventModel() { Name = name, Description = description, Location = location, Time = time };
 
             string sql = @"INSERT INTO dbo.Event (Name, Description, Location, Time)
-                            VALUES (@Name, @Description, @Location, @Time);";
+                           VALUES (@Name, @Description, @Location, @Time);";
 
             return _accessor.SaveData(sql, data);
         }
@@ -46,7 +44,7 @@ namespace MVCSkillsShowcaseDataLibrary.DataAccess
         public IEnumerable<EventModel> LoadEvents()
         {
             string sql = @"SELECT Id, Name, Description, Location, Time
-                            FROM dbo.Event;";
+                           FROM dbo.Event;";
 
             return _accessor.LoadData<EventModel>(sql);
         }
