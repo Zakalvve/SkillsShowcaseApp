@@ -24,7 +24,7 @@ namespace MVCSkillsShowcaseApp.Controllers
 
             try
             {
-                var results = await _boardGameClient.GetGamesBySearchTermAsync(searchTerm);
+                var results = await _boardGameClient.SearchGamesAsync(searchTerm);
                 return View(results);
             } 
             catch(Exception e)

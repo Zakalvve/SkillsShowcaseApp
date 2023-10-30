@@ -44,7 +44,7 @@ namespace MVCSkillsShowcaseApp.Services
             }
         }
 
-        public async Task<IEnumerable<BoardGameResultModel>> GetGamesBySearchTermAsync(string searchTerm)
+        public async Task<IEnumerable<BoardGameResultModel>> SearchGamesAsync(string searchTerm)
         {
             string url = $"{_rootPath}/search/?search={searchTerm}";
 
