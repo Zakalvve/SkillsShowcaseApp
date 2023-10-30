@@ -1,4 +1,5 @@
-﻿using System.Xml.Serialization;
+﻿using System.ComponentModel;
+using System.Xml.Serialization;
 using MVCSkillsShowcaseApp.Models.Games;
 
 namespace MVCSkillsShowcaseApp.Services
@@ -28,6 +29,11 @@ namespace MVCSkillsShowcaseApp.Services
 
                         var result = ((BoardGameSearchResult)serializer.Deserialize(stream)).Result;
 
+                        if (result.Id == null || result.Name == null && result.Description == null && result.Image == null)
+                        {
+                            throw new ArgumentException("The given gameId returned an empty object");
+                        }
+
                         return result;
                     }
                 }
@@ -53,7 +59,8 @@ namespace MVCSkillsShowcaseApp.Services
 
                         var results = ((BoardGameSearchResults)serializer.Deserialize(stream)).Results;
 
-                        return results;
+
+                        return results ?? throw new InvalidEnumArgumentException("The given search term did not return any results");
                     }
                 } else
                 {

@@ -2,15 +2,18 @@
 using Microsoft.IdentityModel.Tokens;
 using MVCSkillsShowcaseApp.Models.Games;
 using MVCSkillsShowcaseApp.Services;
+using System.ComponentModel;
 
 namespace MVCSkillsShowcaseApp.Controllers
 {
     public class GamesController : Controller
     {
+        private readonly ILogger<GamesController> _logger;
         private readonly IBoardGameClient _boardGameClient;
 
-        public GamesController(IBoardGameClient boardGameClient)
+        public GamesController(ILogger<GamesController> logger, IBoardGameClient boardGameClient)
         {
+            _logger = logger;
             _boardGameClient = boardGameClient;
         }
 
@@ -19,9 +22,16 @@ namespace MVCSkillsShowcaseApp.Controllers
         {
             if (searchTerm.IsNullOrEmpty()) return View(new List<BoardGameResultModel>());
 
-            var results = await _boardGameClient.GetGamesBySearchTermAsync(searchTerm);
-
-            return View(results);
+            try
+            {
+                var results = await _boardGameClient.GetGamesBySearchTermAsync(searchTerm);
+                return View(results);
+            } 
+            catch(Exception e)
+            {
+                _logger.LogWarning(e.Message);
+                return View(new List<BoardGameResultModel>());
+            }
         }
 
 
@@ -36,9 +46,17 @@ namespace MVCSkillsShowcaseApp.Controllers
         {
             if (gameId.IsNullOrEmpty()) RedirectToAction("Index");
 
-            var result = await _boardGameClient.GetGameByIdAsync(gameId);
+            try
+            {
+                var result = await _boardGameClient.GetGameByIdAsync(gameId);
 
-            return View(result);
+                return View(result);
+            } 
+            catch(Exception e)
+            {
+                _logger.LogWarning(e.Message);
+                return RedirectToAction("Index");
+            }
         }
     }
 }
