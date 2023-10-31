@@ -10,7 +10,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MVCSkillsShowcaseDataLibrary\MVCSkillsShowcaseDataLibrary.csproj" />
+    <ProjectReference Include="..\DataAccessLibrary\MVCSkillsShowcaseDataLibrary.csproj" />
   </ItemGroup>
 
 </Project>
